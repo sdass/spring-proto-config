@@ -1,0 +1,80 @@
+https://www.logicbig.com/tutorials/spring-framework/spring-core/using-lookup-method.html
+must revisit
+
+prototype bean in singleton
+---------------------------------
+@Configuration
+@ComponentScan("com.subra")
+public class AppConfig {
+
+    public static void main(String[] args) throws InterruptedException {
+    	System.out.println("----------1------");
+        AnnotationConfigApplicationContext context =
+                new AnnotationConfigApplicationContext(AppConfig.class);
+        MSingleton sbean = context.getBean(MSingleton.class);
+        System.out.println("----------2------" + sbean.hashCode());
+     sbean.showMessage();
+     Thread.sleep(2000);
+
+     sbean = context.getBean(MSingleton.class);
+     System.out.println("----------3------"  + sbean.hashCode());
+     sbean.showMessage();
+
+    }
+
+    /* Other way than @Component
+    @Bean
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) //exact must
+    public MProtoType getProtoTypeBean(){
+    	return new MProtoType();
+    }
+    */
+
+}
+//---------------------------------------------
+output:
+----------2------852445367
+MProtoType obj-hex 2008966511 protoMsg =2019-11-10T09:19:39.244
+----------3------852445367
+MProtoType obj-hex 433874882 protoMsg =2019-11-10T09:19:41.286
+//---------------------------------------
+import org.springframework.stereotype.Component;
+
+@Component //need to prepare as a @Bean preferred. Or like this factory from @config file package scan
+//@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS) does not work
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class MProtoType {
+
+	private String dateMsg =  LocalDateTime.now().toString() ;
+
+	public String getCurrentTime(){
+		return dateMsg;
+	}
+}
+//-----------------------------------
+import org.springframework.beans.factory.annotation.Lookup;
+
+@Component
+public class MSingleton {
+
+	/* NO
+	@Autowired
+	private MProtoType mp;
+*/
+	//NO private MProtoType mp;
+
+	public String showMessage(){
+		//NO String sd = mp.getCurrentTime();
+		//String protoMsg = lookUpPrototypeBean().getCurrentTime();
+		//do 2 step to debug
+		MProtoType mp = lookUpPrototypeBean(); String protoMsg = mp.getCurrentTime();
+		System.out.println( "MProtoType obj-hex " + mp.hashCode() + " protoMsg =" + protoMsg);
+		return protoMsg;
+	}
+
+	@Lookup
+	public MProtoType lookUpPrototypeBean(){
+		return null;
+	}
+
+}
