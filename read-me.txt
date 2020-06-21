@@ -1,3 +1,16 @@
+2 or n number of prototype bean added to singleton bean
+console output:
+----------1------
+Jun 21, 2020 11:50:04 AM org.springframework.context.annotation.AnnotationConfigApplicationContext prepareRefresh
+INFO: Refreshing org.springframework.context.annotation.AnnotationConfigApplicationContext@5e9f23b4: startup date [Sun Jun 21 11:50:04 EDT 2020]; root of context hierarchy
+----------2------1848415041
+MProtoType obj-hex 1296674576 protoMsg =2020-06-21T11:50:05.407
+QProtoType obj-hex 664457955 protoLong =1592754605
+----------3------1848415041
+MProtoType obj-hex 1477657879 protoMsg =2020-06-21T11:50:07.476
+QProtoType obj-hex 1146147158 protoLong =1592754607
+
+
 https://www.logicbig.com/tutorials/spring-framework/spring-core/using-lookup-method.html
 must revisit
 
